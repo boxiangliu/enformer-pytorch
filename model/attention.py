@@ -156,6 +156,7 @@ def positional_features_exponential(positions, feature_size, seq_length, min_hal
     output = torch.exp(-np.log(2.0) / half_life * positions)
     print(output.shape)
     print(positions.shape)
+    print(feature_size)
     assert (output.shape[:-1] ==
             positions.shape) & (output.shape[-1] == feature_size)
     return torch.exp(-np.log(2.0) / half_life * positions)
