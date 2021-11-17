@@ -4,6 +4,7 @@ from torch.nn import functional as F
 from einops.layers.torch import Rearrange
 from einops import rearrange, reduce
 from model.attention import MultiHeadAttention
+import numpy as np
 
 SEQUENCE_LENGTH = 196_608
 TARGET_LENGTH = 896
