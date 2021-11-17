@@ -190,7 +190,7 @@ class SoftmaxPooling1D(nn.Module):
     def forward(self, x):
         assert x.shape[-1] % self._pool_size == 0, ("input length must "
                                               "by divisible by pool_size")
-        x = rearrange(x, "b c (l p) -> b l p c", p=pool_size)
+        x = rearrange(x, "b c (l p) -> b l p c", p=self._pool_size)
         x = x * F.softmax(self._logit_linear(x), axis=-2)
         x = torch.sum(x, dim=-2)
         return rearrange(x, "b l c -> b c l")
