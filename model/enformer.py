@@ -155,7 +155,7 @@ class Residual(nn.Module):
     """residuel block"""
 
     def __init__(self, module):
-        super().__init()
+        super().__init__()
         self._module = module
 
     def forward(self, x, *args, **kwargs):
