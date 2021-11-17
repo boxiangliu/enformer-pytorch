@@ -211,7 +211,7 @@ def exponential_linspace_int(start, end, num, divisible_by=1):
 def one_hot_encode(sequence: str,
                    alphabet: str = 'ACGT',
                    neutral_alphabet: str = 'N',
-                   neutral_value: Any = 0,
+                   neutral_value = 0,
                    dtype=np.float32) -> np.ndarray:
     """One-hot encode sequence."""
     def to_uint8(string):
