@@ -28,7 +28,7 @@ class MultiHeadAttention(nn.Module):
             version of basis function will be used. if False, a symmeetric and
                 asymmetric versions will be used.
             num_relative_position_features: number of relative positional
-                features to compute. if None, `value_size * num_heads` is used.
+                features to compute. if None, `value_dim * num_heads` is used.
             positional_dropout_rate: dropout rate for the positional encodings
                 if relative positions are used
             zero_initialize: if True, the final linear layer will be 0 initialized
@@ -43,13 +43,13 @@ class MultiHeadAttention(nn.Module):
         if num_relative_position_features is None:
             divisible_by = 2 * len(self._relative_position_functions)
             self._num_relative_position_features = (
-                (self._value_size // divisible_by) * divisible_by)
+                (self._value_dim // divisible_by) * divisible_by)
         else:
             self._num_relative_position_features = num_relative_position_features
         self._positional_dropout_rate = positional_dropout_rate
 
-        key_proj_size = self._key_size * self._num_heads
-        embedding_size = self._value_size * self._num_heads
+        key_proj_size = self._key_dim * self._num_heads
+        embedding_size = self._value_dim * self._num_heads
 
         # query, key, and value weights
         self._q_layer = nn.Linear(input_dim, key_proj_size, bias=False)
@@ -74,7 +74,7 @@ class MultiHeadAttention(nn.Module):
         self._attn_dropout_layer = nn.Dropout(self._attention_dropout_rate)
 
     def forward(self, inputs):
-        embedding_size = self._value_size * self._num_heads
+        embedding_size = self._value_dim * self._num_heads
         seq_len = inputs.shape[-2]
 
         q = self._q_layer(inputs)
