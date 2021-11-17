@@ -7,7 +7,7 @@ import torch
 class TestEnformer(unittest.TestCase):
 
     def test_enformer(self):
-        model = enformer.Enformer(channels=1536, num_heads=9, num_transformer_layers=11)
+        model = enformer.Enformer(channels=1536, num_heads=8, num_transformer_layers=11)
         inputs = _get_random_input()
         outputs = model(inputs)
         self.assertEqual(outputs["human"].shape, torch.Size((1, enformer.TARGET_LENGTH, 5313)))
