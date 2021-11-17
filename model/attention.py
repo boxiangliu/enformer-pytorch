@@ -120,7 +120,7 @@ class MultiHeadAttention(nn.Module):
         attn = self._attn_dropout_layer(attn)
 
         output = einsum("b h i j, b h j c -> b h i c", attn, v)  # [B, H, L, V]
-        output = rearrange(out, "b h l c -> b l (h c)")
+        output = rearrange(output, "b h l c -> b l (h c)")
         return self._embedding_layer(output)
 
 
