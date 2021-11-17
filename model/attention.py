@@ -40,7 +40,6 @@ class MultiHeadAttention(nn.Module):
         self._scaling = scaling
         self._attention_dropout_rate = attention_dropout_rate
         self._relative_position_symmetric = relative_position_symmetric
-        self._relative_position_functions = relative_position_functions
         if num_relative_position_features is None:
             divisible_by = 2 * len(self._relative_position_functions)
             self._num_relative_position_features = (
