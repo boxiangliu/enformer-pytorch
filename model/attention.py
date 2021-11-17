@@ -77,7 +77,7 @@ class MultiHeadAttention(nn.Module):
 
     def forward(self, inputs):
         embedding_size = self._value_dim * self._num_heads
-        seq_len = inputs.shape[-2]
+        seq_length = inputs.shape[-2]
 
         q = self._q_layer(inputs)
         k = self._k_layer(inputs)
@@ -94,11 +94,11 @@ class MultiHeadAttention(nn.Module):
         if self._scaling:
             q *= self._key_dim ** -0.5
 
-        distances = torch.arange(-seq_len + 1, seq_len, device=inputs.device)
+        distances = torch.arange(-seq_length + 1, seq_length, device=inputs.device)
         positional_encodings = positional_features_all(
             positions=distances,
             feature_size=self._num_relative_position_features,
-            seq_length=seq_len,
+            seq_length=seq_length,
             symmetric=True)
         # [Batch, 2L - 1, Cr]
 
@@ -148,7 +148,7 @@ def positional_features_exponential(positions, feature_size, seq_length, min_hal
     """
     assert seq_length == torch.max(positions) + 1, \
         "seq_length should be max(positions) + 1"
-    max_half_life = np.log(seq_len) / np.log(2.0)
+    max_half_life = np.log(seq_length) / np.log(2.0)
     half_life = 2 ** torch.linspace(min_half_life, max_half_life,
                                     feature_size, device=positions.device)
     half_life = half_life[None, ...]
@@ -191,7 +191,7 @@ def positional_features_gamma(positions, feature_size, seq_length, stddev=None, 
     if start_mean is None:
         start_mean = seq_length / features
 
-    mean = torch.linspace(start_mean, seq_len, features,
+    mean = torch.linspace(start_mean, seq_length, features,
                           device=positions.device)
     mean = mean[None, ...]
     concentration = (mean / stddev) ** 2
