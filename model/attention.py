@@ -228,6 +228,10 @@ def positional_features_all(positions, feature_size, seq_length, symmetric=False
     assert seq_length == torch.max(positions) + 1, \
         "seq_length should be max(positions) + 1"
 
+    feature_functions = [positional_features_exponential,
+                         positional_features_central_mask,
+                         positional_features_gamma]
+
     num_components = len(feature_functions)
     if not symmetric:
         num_components = 2 * num_components
@@ -235,9 +239,6 @@ def positional_features_all(positions, feature_size, seq_length, symmetric=False
     assert feature_size % num_components == 0, (f"feature_size has "
                                                  "to be divisible by {num_components}")
 
-    feature_functions = [positional_features_exponential,
-                         positional_features_central_mask,
-                         positional_features_gamma]
 
     num_basis_per_class = feature_size // num_components
 
