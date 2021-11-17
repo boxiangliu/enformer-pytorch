@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 from einops.layers.torch import Rearrange
-from einops import rearrange, reduce
+from einops import rearrange
 from model.attention import MultiHeadAttention
 import numpy as np
 
