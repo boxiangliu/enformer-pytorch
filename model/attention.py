@@ -176,7 +176,8 @@ def positional_features_central_mask(positions, feature_size, seq_length):
                                       device=positions.device).float()
     center_widths = center_widths - 1
     output = (center_widths[None, ...] > positions.abs()[..., None]).float()
-
+    print(output.shape)
+    print(positions.shape)
     assert (output.shape[:-1] == positions.shape[:-1] and
             output.shape[-1] == feature_size)
     return output
