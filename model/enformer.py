@@ -59,7 +59,7 @@ class Enformer(nn.Module):
         conv_tower = nn.Sequential(*conv_layers)
 
         attn_kwargs = {
-            "input_dim": channels
+            "input_dim": channels,
             "value_dim": channels // num_heads,
             "key_dim": 64,
             "num_heads": num_heads,
