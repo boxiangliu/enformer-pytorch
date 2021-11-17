@@ -104,7 +104,7 @@ class Enformer(nn.Module):
         final_pointwise = nn.Sequential(
             nn.Linear(channels, channels * 2, 1),
             nn.Dropout(dropout_rate / 8),
-            gelu
+            GELU()
         )
 
         self._trunk = nn.Sequential(
@@ -165,7 +165,7 @@ class Residual(nn.Module):
 def conv_block(in_channels, out_channels, kernel_size=1, **kwargs):
     return nn.Sequential(
         nn.BatchNorm1d(in_channels),
-        gelu,
+        GELU(),
         nn.Conv1d(in_channels, out_channels,
                   kernel_size, padding="same", **kwargs)
     )
@@ -196,8 +196,12 @@ class SoftmaxPooling1D(nn.Module):
         return rearrange(x, "b l c -> b c l")
 
 
-def gelu(x):
-    return torch.sigmoid(1.702 * x) * x
+class GELU(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x):
+        return torch.sigmoid(1.702 * x) * x
 
 
 def exponential_linspace_int(start, end, num, divisible_by=1):
