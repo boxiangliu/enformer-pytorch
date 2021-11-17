@@ -117,7 +117,7 @@ class MultiHeadAttention(nn.Module):
 
         logits = content_logits + rel_logits
         attn = logits.softmax(dim=-1)
-        attn = self.attn_dropout(attn)
+        attn = self._attn_dropout_layer(attn)
 
         output = eimsum("b h i j, b h j c -> b h i c", attn, v)  # [B, H, L, V]
         output = rearrange(out, "b h l c -> b l (h c)")
