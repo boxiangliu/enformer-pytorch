@@ -3,6 +3,7 @@ import torch
 from torch import nn, einsum
 from einops import rearrange
 
+
 class MultiHeadAttention(nn.Module):
     """multi-head attention"""
 
@@ -94,7 +95,8 @@ class MultiHeadAttention(nn.Module):
         if self._scaling:
             q *= self._key_dim ** -0.5
 
-        distances = torch.arange(-seq_length + 1, seq_length, device=inputs.device)
+        distances = torch.arange(-seq_length + 1,
+                                 seq_length, device=inputs.device)
         positional_encodings = positional_features_all(
             positions=distances,
             feature_size=self._num_relative_position_features,
@@ -154,11 +156,8 @@ def positional_features_exponential(positions, feature_size, seq_length, min_hal
     half_life = half_life[None, ...]
     positions = positions.abs()[..., None]
     output = torch.exp(-np.log(2.0) / half_life * positions)
-    print(output.shape)
-    print(positions.shape)
-    print(feature_size)
-    assert (output.shape[:-1] ==
-            positions.shape) & (output.shape[-1] == feature_size)
+    assert (output.shape[:-1] == positions.shape[:-1] &
+            output.shape[-1] == feature_size)
     return torch.exp(-np.log(2.0) / half_life * positions)
 
 
@@ -240,7 +239,6 @@ def positional_features_all(positions, feature_size, seq_length, symmetric=False
 
     assert feature_size % num_components == 0, (f"feature_size has "
                                                  "to be divisible by {num_components}")
-
 
     num_basis_per_class = feature_size // num_components
 
