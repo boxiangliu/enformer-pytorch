@@ -106,7 +106,7 @@ class MultiHeadAttention(nn.Module):
 
         positional_encodings = self._pos_dropout_layer(positional_encodings)
         rel_k = self._rel_pos_layer(positional_encodings)
-        rel_k = rearrange("l (h c) -> h l c", rel_k)
+        rel_k = rearrange(rel_k, "l (h c) -> h l c", h=self._num_heads)
 
         rel_logits = einsum("b h i c, h j c -> b h i j",
                             q + self._rel_pos_bias, rel_k)  # [B, H, L, 2L-1]
