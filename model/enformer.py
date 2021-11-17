@@ -133,7 +133,7 @@ class Enformer(nn.Module):
     def forward(self, inputs):
         x = self.trunk(inputs)
         return {head: head_module(x) for
-                head, head_module in self.head.items()}
+                head, head_module in self.heads.items()}
 
 
 class TargetLengthCrop(nn.Module):
