@@ -89,7 +89,7 @@ class MultiHeadAttention(nn.Module):
         l: length
         """
         q, k, v = map(lambda x: rearrange(
-            x, "b l (h c) -> b h l c", h=self.heads), (q, k, v))
+            x, "b l (h c) -> b h l c", h=self._num_heads), (q, k, v))
 
         if self._scaling:
             q *= self._key_dim ** -0.5
