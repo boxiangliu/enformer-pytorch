@@ -122,18 +122,18 @@ class Enformer(nn.Module):
             for head, head_channels in heads_channels.items()
         })
 
-        @property
-        def trunk(self):
-            return self._trunk
+    @property
+    def trunk(self):
+        return self._trunk
 
-        @property
-        def heads(self):
-            return self._heads
+    @property
+    def heads(self):
+        return self._heads
 
-        def forward(self, inputs):
-            x = self.trunk(inputs)
-            return {head: head_module(x) for
-                    head, head_module in self.head.items()}
+    def forward(self, inputs):
+        x = self.trunk(inputs)
+        return {head: head_module(x) for
+                head, head_module in self.head.items()}
 
 
 class TargetLengthCrop(nn.Module):
