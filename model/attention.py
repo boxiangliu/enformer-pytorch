@@ -33,6 +33,8 @@ class MultiHeadAttention(nn.Module):
                 if relative positions are used
             zero_initialize: if True, the final linear layer will be 0 initialized
         """
+        super().__init__()
+
         self._input_dim = input_dim
         self._value_dim = value_dim
         self._key_dim = key_dim
