@@ -184,7 +184,7 @@ def gamma_pdf(x, concentration, rate):
     return torch.exp(log_unnormalized_prob - log_normalization)
 
 
-def positional_features_gamma(positions, feature_size, seq_length, stddev=None, start_mean=None):
+def positional_features_gamma(positions, feature_size, seq_length, stddev=None, start_mean=None, eps=1e-8):
     if stddev is None:
         stddev = seq_length / (2 * feature_size)
 
