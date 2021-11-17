@@ -156,10 +156,6 @@ def positional_features_exponential(positions, feature_size, seq_length, min_hal
     half_life = half_life[None, ...]
     positions = positions.abs()[..., None]
     output = torch.exp(-np.log(2.0) / half_life * positions)
-    print(output.shape[:-1])
-    print(positions.shape[:-1])
-    print(output.shape[-1])
-    print(feature_size)
     assert ((output.shape[:-1] == positions.shape[:-1]) and
             (output.shape[-1] == feature_size))
     return torch.exp(-np.log(2.0) / half_life * positions)
@@ -176,9 +172,7 @@ def positional_features_central_mask(positions, feature_size, seq_length):
                                       device=positions.device).float()
     center_widths = center_widths - 1
     output = (center_widths[None, ...] > positions.abs()[..., None]).float()
-    print(output.shape)
-    print(positions.shape)
-    assert (output.shape[:-1] == positions.shape[:-1] and
+    assert (output.shape[:-1] == positions.shape and
             output.shape[-1] == feature_size)
     return output
 
