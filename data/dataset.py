@@ -1,27 +1,28 @@
 import os
-import json 
-import pandas as pd
-import tensorflow as tf
-
-def get_targets(organism):
-    targets_txt = f'https://raw.githubusercontent.com/calico/basenji/master/manuscripts/cross2020/targets_{organism}.txt'
-    return pd.read_csv(targets_txt, sep='\t')
-
-organism = get_targets("human")
+import torch
 
 
-def organism_path(organism):
-    return os.path.join('gs://basenji_barnyard/data', organism)
+class BasenjiDataset(torch.utils.data.Dataset):
 
+    def __init__(self, human_file, mouse_file):
+        self._human_file = human_file
+        self._mouse_file = mouse_file
+        self._human_data = torch.load(self._human_file)
+        self._mouse_file = torch.load(self._mouse_file)
 
-def get_metadata(organism):
-    # Keys:
-    # num_targets, train_seqs, valid_seqs, test_seqs, seq_length,
-    # pool_width, crop_bp, target_length
-    path = os.path.join(organism_path(organism), 'statistics.json')
-    with tf.io.gfile.GFile(path, 'r') as f:
-        return json.load(f)
+    @property
+    def human_data(self):
+        return self._human_data
 
+    @property
+    def mouse_data(self):
+        return self._mouse_data
 
+    def __len__(self):
+        return len(self.human_data)
 
-metadata = get_metadata("human")
+    def __getitem__(self, idx):
+        return {"human": {"sequence": self.human_data[idx]["sequence"],
+                          "target": self.human_data[idx]["target"]},
+                "mouse": {"sequence": self.mouse_data[idx]["sequence"],
+                          "target": self.mouse_data[idx]["target"]}}
