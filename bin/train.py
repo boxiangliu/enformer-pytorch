@@ -23,7 +23,6 @@ class Trainer(object):
             batch = next(self.iter)
 
         except StopIteration:
-            print("#### Epoch finished #####")
             self.iter = iter(self.data)
             batch = next(self.iter)
 
@@ -34,15 +33,20 @@ class Trainer(object):
             pred = self.model(batch[head]["sequence"].to(self.device))
             loss = self.criterion(pred[head], batch[head]["target"].to(self.device))
             loss.mean().backward()
-
+            print(f"head: {head}; loss: {loss.mean().item():03f}")
             self.optimizer.step()
 
-device = "cuda:3"
-data = BasenjiDataset(human_file="data/example_data_human.pt",
-                      mouse_file="data/example_data_mouse.pt")
-model = Enformer().to(device)
 
-trainer = Trainer(model, data, device)
+def main():
+    device = "cuda"
+    data = BasenjiDataset(human_file="data/example_data_human.pt",
+                          mouse_file="data/example_data_mouse.pt")
+    model = Enformer().to(device)
 
-for _ in range(20):
-    trainer.train_step()
+    trainer = Trainer(model, data, device)
+
+    for _ in range(20):
+        trainer.train_step()
+
+if __name__ == "__main__":
+    main()
