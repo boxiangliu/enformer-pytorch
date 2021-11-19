@@ -15,7 +15,7 @@ class Print(nn.Module):
         self._name = name
 
     def forward(self, x):
-        print(f"{self.name}: {x.shape}")
+        print(f"{self._name}: {x.shape}")
         return x
 
 class Enformer(nn.Module):
