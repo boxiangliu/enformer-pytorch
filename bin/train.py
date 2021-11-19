@@ -6,9 +6,10 @@ from torch.utils.data import DataLoader
 
 class Trainer(object):
 
-    def __init__(self, model, data):
+    def __init__(self, model, data, device="cuda"):
         self.model = model
         self.data = DataLoader(data, batch_size=1)
+        self.device = device
         self.initialize()
 
     def initialize(self):
@@ -22,21 +23,26 @@ class Trainer(object):
             batch = next(self.iter)
 
         except StopIteration:
+            print("#### Epoch finished #####")
             self.iter = iter(self.data)
             batch = next(self.iter)
 
         for head in ["human", "mouse"]:
-            pred = self.model(batch[head]["sequence"])
-            loss = self.criterion(pred, batch[head]["target"])
 
             self.optimizer.zero_grad()
-            loss.backward()
+
+            pred = self.model(batch[head]["sequence"].to(self.device))
+            loss = self.criterion(pred[head], batch[head]["target"].to(self.device))
+            loss.mean().backward()
+
             self.optimizer.step()
 
-
+device = "cuda:3"
 data = BasenjiDataset(human_file="data/example_data_human.pt",
                       mouse_file="data/example_data_mouse.pt")
-model = Enformer()
+model = Enformer().to(device)
 
-trainer = Trainer(model, data)
-trainer.train_step()
+trainer = Trainer(model, data, device)
+
+for _ in range(20):
+    trainer.train_step()

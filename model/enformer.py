@@ -46,13 +46,9 @@ class Enformer(nn.Module):
             # b: batch
             # l: length
             # c: channel
-            Print(1),
             Rearrange("b l c -> b c l"),
-            Print(2),
             nn.Conv1d(num_alphabet, channels // 2, 15, padding="same"),
-            Print(3),
             Residual(conv_block(channels // 2, channels // 2, 1)),
-            Print(4),
             SoftmaxPooling1D(channels // 2, pool_size=2)
         )
 
@@ -66,8 +62,7 @@ class Enformer(nn.Module):
                 nn.Sequential(
                     conv_block(in_channels, out_channels, 5),
                     Residual(conv_block(out_channels, out_channels, 1)),
-                    SoftmaxPooling1D(out_channels, pool_size=2),
-                    Print("conv tower")
+                    SoftmaxPooling1D(out_channels, pool_size=2)
                 )
             )
         conv_tower = nn.Sequential(*conv_layers)
@@ -102,17 +97,14 @@ class Enformer(nn.Module):
                     Residual(nn.Sequential(
                         nn.LayerNorm(channels),
                         MultiHeadAttention(**attn_kwargs),
-                        nn.Dropout(dropout_rate),
-                        Print("transformer")
+                        nn.Dropout(dropout_rate)
                     )),
-                    transformer_mlp(),
-                    Print("MLP")
+                    transformer_mlp()
                 )
             )
 
         transformer = nn.Sequential(
             Rearrange("b c l -> b l c"),
-            Print("before transformer"),
             *transformer
         )
 
@@ -128,9 +120,7 @@ class Enformer(nn.Module):
             conv_tower,
             transformer,
             crop_final,
-            Print("crop"),
-            final_pointwise,
-            Print("final")
+            final_pointwise
         )
 
         self._heads = nn.ModuleDict({
