@@ -9,6 +9,14 @@ import numpy as np
 SEQUENCE_LENGTH = 196_608
 TARGET_LENGTH = 896
 
+class Print(nn.Module):
+    def __init__(self, name):
+        super(Print, self).__init__()
+        self._name = name
+
+    def forward(self, x):
+        print(f"{self.name}: {x.shape}")
+        return x
 
 class Enformer(nn.Module):
     """Main class"""
@@ -38,9 +46,13 @@ class Enformer(nn.Module):
             # b: batch
             # l: length
             # c: channel
+            Print(1),
             Rearrange("b l c -> b c l"),
+            Print(2)
             nn.Conv1d(num_alphabet, channels // 2, 15, padding="same"),
+            Print(3)
             Residual(conv_block(channels // 2, channels // 2, 1)),
+            Print(4)
             SoftmaxPooling1D(channels // 2, pool_size=2)
         )
 
@@ -55,6 +67,7 @@ class Enformer(nn.Module):
                     conv_block(in_channels, out_channels, 5),
                     Residual(conv_block(out_channels, out_channels, 1)),
                     SoftmaxPooling1D(out_channels, pool_size=2)
+                    Print("conv tower")
                 )
             )
         conv_tower = nn.Sequential(*conv_layers)
@@ -89,14 +102,17 @@ class Enformer(nn.Module):
                     Residual(nn.Sequential(
                         nn.LayerNorm(channels),
                         MultiHeadAttention(**attn_kwargs),
-                        nn.Dropout(dropout_rate)
+                        nn.Dropout(dropout_rate),
+                        Print("transformer")
                     )),
-                    transformer_mlp()
+                    transformer_mlp(),
+                    Print("MLP")
                 )
             )
 
         transformer = nn.Sequential(
             Rearrange("b c l -> b l c"),
+            Print("before transformer"),
             *transformer
         )
 
@@ -112,7 +128,9 @@ class Enformer(nn.Module):
             conv_tower,
             transformer,
             crop_final,
+            Print("crop")
             final_pointwise
+            Print("final")
         )
 
         self._heads = nn.ModuleDict({
