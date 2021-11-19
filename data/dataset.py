@@ -8,7 +8,7 @@ class BasenjiDataset(torch.utils.data.Dataset):
         self._human_file = human_file
         self._mouse_file = mouse_file
         self._human_data = torch.load(self._human_file)
-        self._mouse_file = torch.load(self._mouse_file)
+        self._mouse_data = torch.load(self._mouse_file)
 
     @property
     def human_data(self):
