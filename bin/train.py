@@ -1,16 +1,18 @@
 from data.dataset import BasenjiDataset
 from model.enformer import Enformer
 from torch import nn, optim
+from torch.utils.data import DataLoader
 
 
 class Trainer(object):
 
     def __init__(self, model, data):
         self.model = model
-        self.data = data
+        self.data = DataLoader(data, batch=1)
         self.initialize()
-        
+
     def initialize(self):
+
         self.iter = iter(self.data)
         self.criterion = nn.PoissonNLLLoss(log_input=False, reduction="none")
         self.optimizer = optim.Adam(self.model.parameters())
