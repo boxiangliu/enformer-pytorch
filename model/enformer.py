@@ -48,11 +48,11 @@ class Enformer(nn.Module):
             # c: channel
             Print(1),
             Rearrange("b l c -> b c l"),
-            Print(2)
+            Print(2),
             nn.Conv1d(num_alphabet, channels // 2, 15, padding="same"),
-            Print(3)
+            Print(3),
             Residual(conv_block(channels // 2, channels // 2, 1)),
-            Print(4)
+            Print(4),
             SoftmaxPooling1D(channels // 2, pool_size=2)
         )
 
@@ -66,7 +66,7 @@ class Enformer(nn.Module):
                 nn.Sequential(
                     conv_block(in_channels, out_channels, 5),
                     Residual(conv_block(out_channels, out_channels, 1)),
-                    SoftmaxPooling1D(out_channels, pool_size=2)
+                    SoftmaxPooling1D(out_channels, pool_size=2),
                     Print("conv tower")
                 )
             )
@@ -128,8 +128,8 @@ class Enformer(nn.Module):
             conv_tower,
             transformer,
             crop_final,
-            Print("crop")
-            final_pointwise
+            Print("crop"),
+            final_pointwise,
             Print("final")
         )
 
