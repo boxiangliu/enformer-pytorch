@@ -22,7 +22,7 @@ class BasenjiDataset(torch.utils.data.Dataset):
         return len(self.human_data)
 
     def __getitem__(self, idx):
-        return {"human": {"sequence": self.human_data[idx]["sequence"],
-                          "target": self.human_data[idx]["target"]},
-                "mouse": {"sequence": self.mouse_data[idx]["sequence"],
-                          "target": self.mouse_data[idx]["target"]}}
+        return {"human": {"sequence": self.human_data["sequence"][idx],
+                          "target": self.human_data["target"][idx]},
+                "mouse": {"sequence": self.mouse_data["sequence"][idx],
+                          "target": self.mouse_data["target"][idx]}}
