@@ -8,7 +8,7 @@ class Trainer(object):
 
     def __init__(self, model, data):
         self.model = model
-        self.data = DataLoader(data, batch=1)
+        self.data = DataLoader(data, batch_size=1)
         self.initialize()
 
     def initialize(self):
